@@ -4,6 +4,7 @@ import com.anli.busstation.dal.interfaces.entities.staff.DriverSkill;
 import com.anli.busstation.dal.sql.test.DBHelper;
 import com.anli.sqlexecution.handling.ResultSetHandler;
 import com.anli.sqlexecution.handling.TransformingResultSet;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public abstract class DriverSkillTest extends com.anli.busstation.dal.test.staff
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger id = BigInteger.valueOf(resultSet.getValue(1, Long.class));
+            BigInteger id = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             Integer maxPassengers = resultSet.getValue(3, Integer.class);
             Integer maxRideLength = resultSet.getValue(4, Integer.class);
@@ -35,7 +36,7 @@ public abstract class DriverSkillTest extends com.anli.busstation.dal.test.staff
         BigInteger id = generateId();
         String createQuery = "insert into driver_skills (skill_id, name, max_passengers, max_ride_length) values(?, ?, ?, ?)";
         List params = new ArrayList(4);
-        params.add(id.longValue());
+        params.add(new BigDecimal(id));
         params.add(name);
         params.add(maxPassengers);
         params.add(maxRideLength);
@@ -47,7 +48,7 @@ public abstract class DriverSkillTest extends com.anli.busstation.dal.test.staff
     @Override
     protected DriverSkill getEntityManually(BigInteger id) throws Exception {
         String selectQuery = "select skill_id, name, max_passengers, max_ride_length from driver_skills where skill_id = ?";
-        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(id.longValue()),
+        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
                 new DriverSkillSelector());
     }
 

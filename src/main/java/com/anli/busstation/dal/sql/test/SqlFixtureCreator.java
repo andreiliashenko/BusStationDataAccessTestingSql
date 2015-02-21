@@ -19,6 +19,7 @@ import com.anli.busstation.dal.interfaces.entities.staff.MechanicSkill;
 import com.anli.busstation.dal.interfaces.entities.vehicles.TechnicalState;
 import com.anli.busstation.dal.interfaces.entities.traffic.Ticket;
 import com.anli.busstation.dal.test.FixtureCreator;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 
@@ -31,7 +32,7 @@ public abstract class SqlFixtureCreator extends FixtureCreator {
         String table = getTable(entity);
         String idColumn = getIdColumn(entity);
         String updateQuery = "update " + table + " set " + idColumn + " = ? where " + idColumn + " = ?";
-        DBHelper.getExecutor().executeUpdate(updateQuery, Arrays.asList(id.longValue(), entity.getId().longValue()));
+        DBHelper.getExecutor().executeUpdate(updateQuery, Arrays.asList(new BigDecimal(id), new BigDecimal(entity.getId())));
         setObjectId(entity, id);
     }
 

@@ -20,7 +20,7 @@ public abstract class GasLabelTest extends com.anli.busstation.dal.test.vehicles
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger id = BigInteger.valueOf(resultSet.getValue(1, Long.class));
+            BigInteger id = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             BigDecimal price = resultSet.getValue(3, BigDecimal.class);
 
@@ -37,7 +37,7 @@ public abstract class GasLabelTest extends com.anli.busstation.dal.test.vehicles
 
         String createQuery = "insert into gas_labels (label_id, name, price) values(?, ?, ?)";
         List createParams = new ArrayList(3);
-        createParams.add(id.longValue());
+        createParams.add(new BigDecimal(id));
         createParams.add(name);
         createParams.add(price);
 
@@ -50,7 +50,7 @@ public abstract class GasLabelTest extends com.anli.busstation.dal.test.vehicles
         String selectQuery = "select label_id, name, price from gas_labels where label_id = ?";
 
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(id.longValue()), new GasLabelSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new GasLabelSelector());
     }
 
     @Override

@@ -29,25 +29,25 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger resultId = BigInteger.valueOf(resultSet.getValue(1, Long.class));
+            BigInteger resultId = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             BigDecimal salary = resultSet.getValue(3, BigDecimal.class);
             Timestamp sqlHiringDate = resultSet.getValue(4, Timestamp.class);
             DateTime hiringDate = sqlHiringDate == null ? null : new DateTime(sqlHiringDate.getTime());
-            Long driverId = resultSet.getValue(5, Long.class);
+            BigDecimal driverId = resultSet.getValue(5, BigDecimal.class);
             Employee employee = null;
             if (driverId != null) {
-                Long longDsId = resultSet.getValue(8, Long.class);
-                BigInteger driverSkillId = longDsId != null ? BigInteger.valueOf(longDsId) : null;
+                BigDecimal bdDsId = resultSet.getValue(8, BigDecimal.class);
+                BigInteger driverSkillId = bdDsId != null ? bdDsId.toBigInteger() : null;
                 employee = getNewDriver(resultId, name, salary, hiringDate, driverSkillId, true);
             }
-            Long mechanicId = resultSet.getValue(6, Long.class);
+            BigDecimal mechanicId = resultSet.getValue(6, BigDecimal.class);
             if (mechanicId != null) {
-                Long longMsId = resultSet.getValue(9, Long.class);
-                BigInteger mechanicSkillId = longMsId != null ? BigInteger.valueOf(longMsId) : null;
+                BigDecimal bdMsId = resultSet.getValue(9, BigDecimal.class);
+                BigInteger mechanicSkillId = bdMsId != null ? bdMsId.toBigInteger() : null;
                 employee = getNewMechanic(resultId, name, salary, hiringDate, mechanicSkillId, true);
             }
-            Long salesmanId = resultSet.getValue(7, Long.class);
+            BigDecimal salesmanId = resultSet.getValue(7, BigDecimal.class);
             if (salesmanId != null) {
                 Integer totalSales = resultSet.getValue(10, Integer.class);
                 employee = getNewSalesman(resultId, name, salary, hiringDate, totalSales);
@@ -68,7 +68,7 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
         String createEmployeeQuery = "insert into employees (employee_id, name, salary, hiring_date)"
                 + " values (?, ?, ?, ?)";
         List employeeParams = new ArrayList(4);
-        employeeParams.add(id.longValue());
+        employeeParams.add(new BigDecimal(id));
         employeeParams.add(name);
         employeeParams.add(salary);
         employeeParams.add(sqlHiringDate);
@@ -80,8 +80,8 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
             String createDriverQuery = "insert into drivers (employee_id, skill)"
                     + " values (?, ?)";
             List driverParams = new ArrayList(2);
-            driverParams.add(id.longValue());
-            driverParams.add(skillId != null ? skillId.longValue() : null);
+            driverParams.add(new BigDecimal(id));
+            driverParams.add(skillId != null ? new BigDecimal(skillId) : null);
             executor.executeUpdate(createDriverQuery, driverParams);
         }
         if (employee instanceof Mechanic) {
@@ -90,8 +90,8 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
             String createMechanicQuery = "insert into mechanics (employee_id, skill)"
                     + " values (?, ?)";
             List mechanicParams = new ArrayList(2);
-            mechanicParams.add(id.longValue());
-            mechanicParams.add(skillId != null ? skillId.longValue() : null);
+            mechanicParams.add(new BigDecimal(id));
+            mechanicParams.add(skillId != null ? new BigDecimal(skillId) : null);
             executor.executeUpdate(createMechanicQuery, mechanicParams);
         }
         if (employee instanceof Salesman) {
@@ -99,7 +99,7 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
             String createSalesmanQuery = "insert into salesmen (employee_id, total_sales)"
                     + " values (?, ?)";
             List salesmanParams = new ArrayList(2);
-            salesmanParams.add(id.longValue());
+            salesmanParams.add(new BigDecimal(id));
             salesmanParams.add(totalSales);
             executor.executeUpdate(createSalesmanQuery, salesmanParams);
         }
@@ -116,7 +116,7 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
                 + " left join salesmen s on e.employee_id = s.employee_id"
                 + " where e.employee_id = ?";
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(id.longValue()), new EmployeeSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new EmployeeSelector());
     }
 
     @Override

@@ -23,7 +23,7 @@ public abstract class SalesmanTest extends com.anli.busstation.dal.test.staff.Sa
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger resultId = BigInteger.valueOf(resultSet.getValue(1, Long.class));
+            BigInteger resultId = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             BigDecimal salary = resultSet.getValue(3, BigDecimal.class);
             Timestamp sqlHiringDate = resultSet.getValue(4, Timestamp.class);
@@ -47,12 +47,12 @@ public abstract class SalesmanTest extends com.anli.busstation.dal.test.staff.Sa
         String createSalesmanQuery = "insert into salesmen (employee_id, total_sales)"
                 + " values (?, ?)";
         List employeeParams = new ArrayList(4);
-        employeeParams.add(id.longValue());
+        employeeParams.add(new BigDecimal(id));
         employeeParams.add(name);
         employeeParams.add(salary);
         employeeParams.add(sqlHiringDate);
         List salesmanParams = new ArrayList(2);
-        salesmanParams.add(id.longValue());
+        salesmanParams.add(new BigDecimal(id));
         salesmanParams.add(totalSales);
         SqlExecutor executor = DBHelper.getExecutor();
         executor.executeUpdate(createEmployeeQuery, employeeParams);
@@ -65,7 +65,7 @@ public abstract class SalesmanTest extends com.anli.busstation.dal.test.staff.Sa
         String selectQuery = "select e.employee_id, e.name, e.salary, e.hiring_date, s.total_sales"
                 + " from employees e join salesmen s on e.employee_id = s.employee_id where s.employee_id = ?";
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(id.longValue()), new SalesmanSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new SalesmanSelector());
     }
 
     @Override

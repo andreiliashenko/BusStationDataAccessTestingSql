@@ -7,6 +7,7 @@ import com.anli.busstation.dal.sql.test.IdSelector;
 import com.anli.sqlexecution.execution.SqlExecutor;
 import com.anli.sqlexecution.handling.ResultSetHandler;
 import com.anli.sqlexecution.handling.TransformingResultSet;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger resultId = BigInteger.valueOf(resultSet.getValue(1, Long.class));
+            BigInteger resultId = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             Integer code = resultSet.getValue(2, Integer.class);
             String name = resultSet.getValue(3, String.class);
             return getNewRegion(resultId, code, name, stationList, true);
@@ -47,7 +48,7 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
         String createQuery = "insert into regions (region_id, num_code, name)"
                 + " values(?, ?, ?)";
         List createParams = new ArrayList(3);
-        createParams.add(id.longValue());
+        createParams.add(new BigDecimal(id));
         createParams.add(code);
         createParams.add(name);
         executor.executeUpdate(createQuery, createParams);
@@ -56,7 +57,8 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
         int index = 0;
         for (Station station : stationList) {
             index++;
-            executor.executeUpdate(linkStationQuery, Arrays.asList(id.longValue(), index, station.getId().longValue()));
+            executor.executeUpdate(linkStationQuery, Arrays.asList(new BigDecimal(id), index, 
+                    new BigDecimal(station.getId())));
         }
         return id;
     }
@@ -68,8 +70,8 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
                 + " from regions where region_id = ?";
         SqlExecutor executor = DBHelper.getExecutor();
         List<BigInteger> stationList = executor.executeSelect(selectStationsQuery,
-                Arrays.asList(id.longValue()), new IdSelector());
-        return executor.executeSelect(selectQuery, Arrays.asList(id.longValue()), new RegionSelector(stationList));
+                Arrays.asList(new BigDecimal(id)), new IdSelector());
+        return executor.executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new RegionSelector(stationList));
     }
 
     @Override

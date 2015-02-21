@@ -6,6 +6,7 @@ import com.anli.busstation.dal.interfaces.entities.vehicles.TechnicalState;
 import com.anli.busstation.dal.sql.test.DBHelper;
 import com.anli.sqlexecution.handling.ResultSetHandler;
 import com.anli.sqlexecution.handling.TransformingResultSet;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,13 +22,13 @@ public abstract class BusTest extends com.anli.busstation.dal.test.vehicles.BusT
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger resultId = BigInteger.valueOf(resultSet.getValue(1, Long.class));
-            Long longModelId = resultSet.getValue(2, Long.class);
-            BigInteger modelId = longModelId != null ? BigInteger.valueOf(longModelId) : null;
+            BigInteger resultId = resultSet.getValue(1, BigDecimal.class).toBigInteger();
+            BigDecimal bdModelId = resultSet.getValue(2, BigDecimal.class);
+            BigInteger modelId = bdModelId != null ? bdModelId.toBigInteger() : null;
             String plate = resultSet.getValue(3, String.class);
 
-            Long longStateId = resultSet.getValue(4, Long.class);
-            BigInteger stateId = longStateId != null ? BigInteger.valueOf(longStateId) : null;
+            BigDecimal bdStateId = resultSet.getValue(4, BigDecimal.class);
+            BigInteger stateId = bdStateId != null ? bdStateId.toBigInteger() : null;
             return getNewBus(resultId, modelId, plate, stateId, true);
         }
     }
@@ -46,10 +47,10 @@ public abstract class BusTest extends com.anli.busstation.dal.test.vehicles.BusT
 
         List params = new ArrayList(4);
 
-        params.add(id.longValue());
-        params.add(modelId != null ? modelId.longValue() : null);
+        params.add(new BigDecimal(id));
+        params.add(modelId != null ? new BigDecimal(modelId) : null);
         params.add(plate);
-        params.add(stateId != null ? stateId.longValue() : null);
+        params.add(stateId != null ? new BigDecimal(stateId) : null);
 
         DBHelper.getExecutor().executeUpdate(createQuery, params);
         return id;
@@ -59,7 +60,7 @@ public abstract class BusTest extends com.anli.busstation.dal.test.vehicles.BusT
     protected Bus getEntityManually(BigInteger id) throws Exception {
         String selectQuery = "select bus_id, model, plate, state"
                 + " from buses where bus_id = ?";
-        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(id.longValue()), new BusSelector());
+        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new BusSelector());
     }
 
     @Override

@@ -21,9 +21,9 @@ public abstract class ModelTest extends com.anli.busstation.dal.test.vehicles.Mo
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger id = BigInteger.valueOf(resultSet.getValue(1, Long.class));
-            Long longLabelId = resultSet.getValue(2, Long.class);
-            BigInteger gasLabelId = longLabelId != null ? BigInteger.valueOf(longLabelId) : null;
+            BigInteger id = resultSet.getValue(1, BigDecimal.class).toBigInteger();
+            BigDecimal bdLabelId = resultSet.getValue(2, BigDecimal.class);
+            BigInteger gasLabelId = bdLabelId != null ? bdLabelId.toBigInteger() : null;
             BigDecimal gasRate = resultSet.getValue(3, BigDecimal.class);
             String name = resultSet.getValue(4, String.class);
             Integer seatsNumber = resultSet.getValue(5, Integer.class);
@@ -45,8 +45,8 @@ public abstract class ModelTest extends com.anli.busstation.dal.test.vehicles.Mo
         String createQuery = "insert into models (model_id, gas_label, gas_rate, name, seats_number, tank_volume)"
                 + " values(?, ?, ?, ?, ?, ?)";
         List params = new ArrayList(6);
-        params.add(id.longValue());
-        params.add(gasLabelId != null ? gasLabelId.longValue() : null);
+        params.add(new BigDecimal(id));
+        params.add(gasLabelId != null ? new BigDecimal(gasLabelId) : null);
         params.add(gasRate);
         params.add(name);
         params.add(seatsNumber);
@@ -61,7 +61,7 @@ public abstract class ModelTest extends com.anli.busstation.dal.test.vehicles.Mo
         String selectQuery = "select model_id, gas_label, gas_rate, name, seats_number, tank_volume"
                 + " from models where model_id = ?";
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(id.longValue()), new ModelSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new ModelSelector());
     }
 
     @Override

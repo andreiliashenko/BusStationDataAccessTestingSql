@@ -4,6 +4,7 @@ import com.anli.busstation.dal.interfaces.entities.staff.MechanicSkill;
 import com.anli.busstation.dal.sql.test.DBHelper;
 import com.anli.sqlexecution.handling.ResultSetHandler;
 import com.anli.sqlexecution.handling.TransformingResultSet;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public abstract class MechanicSkillTest extends com.anli.busstation.dal.test.sta
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger id = BigInteger.valueOf(resultSet.getValue(1, Long.class));
+            BigInteger id = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             Integer maxDiffLevel = resultSet.getValue(3, Integer.class);
 
@@ -35,7 +36,7 @@ public abstract class MechanicSkillTest extends com.anli.busstation.dal.test.sta
 
         String createQuery = "insert into mechanic_skills (skill_id, name, max_diff_level) values(?, ?, ?)";
         List createParams = new ArrayList(3);
-        createParams.add(id.longValue());
+        createParams.add(new BigDecimal(id));
         createParams.add(name);
         createParams.add(maxDiffLevel);
 
@@ -47,7 +48,7 @@ public abstract class MechanicSkillTest extends com.anli.busstation.dal.test.sta
     protected MechanicSkill getEntityManually(BigInteger id) throws Exception {
         String selectQuery = "select skill_id, name, max_diff_level from mechanic_skills where skill_id = ?";
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(id.longValue()), new MechanicSkillSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new MechanicSkillSelector());
     }
 
     @Override

@@ -24,9 +24,9 @@ public abstract class StationServiceTest extends com.anli.busstation.dal.test.ma
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger resultId = BigInteger.valueOf(resultSet.getValue(1, Long.class));
-            Long longMechanicId = resultSet.getValue(2, Long.class);
-            BigInteger mechanicId = longMechanicId != null ? BigInteger.valueOf(longMechanicId) : null;
+            BigInteger resultId = resultSet.getValue(1, BigDecimal.class).toBigInteger();
+            BigDecimal bdMechanicId = resultSet.getValue(2, BigDecimal.class);
+            BigInteger mechanicId = bdMechanicId != null ? bdMechanicId.toBigInteger() : null;
             Timestamp beginTimeStamp = resultSet.getValue(3, Timestamp.class);
             DateTime beginTime = beginTimeStamp != null ? new DateTime(beginTimeStamp.getTime()) : null;
             Timestamp endTimeStamp = resultSet.getValue(4, Timestamp.class);
@@ -53,8 +53,8 @@ public abstract class StationServiceTest extends com.anli.busstation.dal.test.ma
         String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, end_time, service_cost)"
                 + " values(?, ?, ?, ?, ?)";
         List taParams = new ArrayList(5);
-        taParams.add(id.longValue());
-        taParams.add(mechanicId != null ? mechanicId.longValue() : null);
+        taParams.add(new BigDecimal(id));
+        taParams.add(mechanicId != null ? new BigDecimal(mechanicId) : null);
         taParams.add(beginTimeStamp);
         taParams.add(endTimeStamp);
         taParams.add(cost);
@@ -62,7 +62,7 @@ public abstract class StationServiceTest extends com.anli.busstation.dal.test.ma
         String createSsQuery = "insert into station_services(assignment_id, description)"
                 + " values(?, ?)";
         List ssParams = new ArrayList(2);
-        ssParams.add(id.longValue());
+        ssParams.add(new BigDecimal(id));
         ssParams.add(description);
 
         executor.executeUpdate(createTaQuery, taParams);
@@ -76,7 +76,7 @@ public abstract class StationServiceTest extends com.anli.busstation.dal.test.ma
                 + "ss.description from technical_assignments ta join station_services ss "
                 + " on ta.assignment_id = ss.assignment_id where ta.assignment_id = ?";
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(id.longValue()), new StationServiceSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new StationServiceSelector());
     }
 
     @Override

@@ -24,13 +24,13 @@ public abstract class MechanicTest extends com.anli.busstation.dal.test.staff.Me
             if (!resultSet.next()) {
                 return null;
             }
-            BigInteger resultId = BigInteger.valueOf(resultSet.getValue(1, Long.class));
+            BigInteger resultId = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             BigDecimal salary = resultSet.getValue(3, BigDecimal.class);
             Timestamp sqlHiringDate = resultSet.getValue(4, Timestamp.class);
             DateTime hiringDate = sqlHiringDate == null ? null : new DateTime(sqlHiringDate.getTime());
-            Long longSkillId = resultSet.getValue(5, Long.class);
-            BigInteger skillId = longSkillId != null ? BigInteger.valueOf(longSkillId) : null;
+            BigDecimal bdSkillId = resultSet.getValue(5, BigDecimal.class);
+            BigInteger skillId = bdSkillId != null ? bdSkillId.toBigInteger() : null;
             return getNewMechanic(resultId, name, salary, hiringDate, skillId, true);
         }
     }
@@ -53,14 +53,14 @@ public abstract class MechanicTest extends com.anli.busstation.dal.test.staff.Me
                 + " values (?, ?)";
 
         List employeeParams = new ArrayList(4);
-        employeeParams.add(id.longValue());
+        employeeParams.add(new BigDecimal(id));
         employeeParams.add(name);
         employeeParams.add(salary);
         employeeParams.add(sqlHiringDate);
 
         List mechanicParams = new ArrayList(2);
-        mechanicParams.add(id.longValue());
-        mechanicParams.add(skillId != null ? skillId.longValue() : null);
+        mechanicParams.add(new BigDecimal(id));
+        mechanicParams.add(skillId != null ? new BigDecimal(skillId) : null);
 
         executor.executeUpdate(createEmployeeQuery, employeeParams);
         executor.executeUpdate(createMechanicQuery, mechanicParams);
@@ -72,7 +72,7 @@ public abstract class MechanicTest extends com.anli.busstation.dal.test.staff.Me
         String selectQuery = "select e.employee_id, e.name, e.salary, e.hiring_date, m.skill"
                 + " from employees e join mechanics m on e.employee_id = m.employee_id where m.employee_id = ?";
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(id.longValue()), new MechanicSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new MechanicSelector());
     }
 
     @Override

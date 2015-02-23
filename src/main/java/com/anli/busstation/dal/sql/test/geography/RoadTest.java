@@ -68,5 +68,4 @@ public abstract class RoadTest extends com.anli.busstation.dal.test.geography.Ro
         String deleteRoadsQuery = "delete from roads";
         DBHelper.getExecutor().executeUpdate(deleteRoadsQuery, null);
     }
-
 }

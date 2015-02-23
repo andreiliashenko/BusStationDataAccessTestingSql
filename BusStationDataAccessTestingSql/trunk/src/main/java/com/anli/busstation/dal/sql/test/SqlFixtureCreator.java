@@ -74,7 +74,7 @@ public abstract class SqlFixtureCreator extends FixtureCreator {
             return "routes";
         }
         if (entity instanceof RoutePoint) {
-            return "route_point";
+            return "route_points";
         }
         if (entity instanceof Station) {
             return "stations";

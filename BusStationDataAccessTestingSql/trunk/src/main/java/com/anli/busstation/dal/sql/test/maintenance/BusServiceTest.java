@@ -51,7 +51,6 @@ public abstract class BusServiceTest extends com.anli.busstation.dal.test.mainte
             }
             return service;
         }
-
     }
 
     @Override

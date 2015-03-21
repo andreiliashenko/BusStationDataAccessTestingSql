@@ -48,10 +48,9 @@ public abstract class StationServiceTest extends com.anli.busstation.dal.test.ma
         BigInteger mechanicId = mechanic != null ? mechanic.getId() : null;
         BigDecimal cost = service.getServiceCost();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
-        String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, end_time, service_cost)"
-                + " values(?, ?, ?, ?, ?)";
+        String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, "
+                + "end_time, service_cost) values(?, ?, ?, ?, ?)";
         List taParams = new ArrayList(5);
         taParams.add(new BigDecimal(id));
         taParams.add(mechanicId != null ? new BigDecimal(mechanicId) : null);
@@ -72,9 +71,10 @@ public abstract class StationServiceTest extends com.anli.busstation.dal.test.ma
 
     @Override
     protected StationService getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, ta.service_cost, "
-                + "ss.description from technical_assignments ta join station_services ss "
-                + " on ta.assignment_id = ss.assignment_id where ta.assignment_id = ?";
+        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, "
+                + "ta.service_cost, ss.description "
+                + "from technical_assignments ta join station_services ss "
+                + "on ta.assignment_id = ss.assignment_id where ta.assignment_id = ?";
         return DBHelper.getExecutor()
                 .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new StationServiceSelector());
     }

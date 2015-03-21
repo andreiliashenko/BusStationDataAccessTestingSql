@@ -53,11 +53,9 @@ public abstract class BusRefuellingTest extends com.anli.busstation.dal.test.mai
         BigDecimal cost = refuelling.getServiceCost();
         Integer volume = refuelling.getVolume();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
-
-        String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, end_time, service_cost)"
-                + " values(?, ?, ?, ?, ?)";
+        String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, "
+                + "end_time, service_cost) values(?, ?, ?, ?, ?)";
         List taParams = new ArrayList(5);
         taParams.add(new BigDecimal(id));
         taParams.add(mechanicId != null ? new BigDecimal(mechanicId) : null);
@@ -79,17 +77,18 @@ public abstract class BusRefuellingTest extends com.anli.busstation.dal.test.mai
         brParams.add(new BigDecimal(id));
         brParams.add(volume);
         executor.executeUpdate(createBrQuery, brParams);
-
         return id;
     }
 
     @Override
     protected BusRefuelling getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, ta.service_cost, "
-                + "bs.bus, br.gas_volume from technical_assignments ta join bus_services bs "
-                + " on ta.assignment_id = bs.assignment_id join bus_refuellings br "
-                + " on ta.assignment_id = br.assignment_id where ta.assignment_id = ?";
-        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new RefuellingSelector());
+        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, "
+                + "ta.service_cost, bs.bus, br.gas_volume "
+                + "from technical_assignments ta join bus_services bs "
+                + "on ta.assignment_id = bs.assignment_id join bus_refuellings br "
+                + "on ta.assignment_id = br.assignment_id where ta.assignment_id = ?";
+        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
+                new RefuellingSelector());
     }
 
     @Override
@@ -99,5 +98,4 @@ public abstract class BusRefuellingTest extends com.anli.busstation.dal.test.mai
                 + "on bs.assignment_id = ta.assignment_id";
         DBHelper.getExecutor().executeUpdate(deleteBrQuery, null);
     }
-
 }

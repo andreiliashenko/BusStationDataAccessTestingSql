@@ -41,9 +41,8 @@ public abstract class ModelTest extends com.anli.busstation.dal.test.vehicles.Mo
         Integer seatsNumber = model.getSeatsNumber();
         Integer tankVolume = model.getTankVolume();
         BigInteger id = generateId();
-
-        String createQuery = "insert into models (model_id, gas_label, gas_rate, name, seats_number, tank_volume)"
-                + " values(?, ?, ?, ?, ?, ?)";
+        String createQuery = "insert into models (model_id, gas_label, gas_rate, name, seats_number, "
+                + "tank_volume) values(?, ?, ?, ?, ?, ?)";
         List params = new ArrayList(6);
         params.add(new BigDecimal(id));
         params.add(gasLabelId != null ? new BigDecimal(gasLabelId) : null);
@@ -51,7 +50,6 @@ public abstract class ModelTest extends com.anli.busstation.dal.test.vehicles.Mo
         params.add(name);
         params.add(seatsNumber);
         params.add(tankVolume);
-
         DBHelper.getExecutor().executeUpdate(createQuery, params);
         return id;
     }

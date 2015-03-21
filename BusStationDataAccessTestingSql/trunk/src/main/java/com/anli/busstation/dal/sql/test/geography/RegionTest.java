@@ -42,9 +42,7 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
         Integer code = region.getCode();
         String name = region.getName();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
-
         String createQuery = "insert into regions (region_id, num_code, name)"
                 + " values(?, ?, ?)";
         List createParams = new ArrayList(3);
@@ -57,7 +55,7 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
         int index = 0;
         for (Station station : stationList) {
             index++;
-            executor.executeUpdate(linkStationQuery, Arrays.asList(new BigDecimal(id), index, 
+            executor.executeUpdate(linkStationQuery, Arrays.asList(new BigDecimal(id), index,
                     new BigDecimal(station.getId())));
         }
         return id;
@@ -65,13 +63,15 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
 
     @Override
     protected Region getEntityManually(BigInteger id) throws Exception {
-        String selectStationsQuery = "select station_id from stations where region = ? order by region_order";
+        String selectStationsQuery = "select station_id from stations"
+                + " where region = ? order by region_order";
         String selectQuery = "select region_id, num_code, name"
                 + " from regions where region_id = ?";
         SqlExecutor executor = DBHelper.getExecutor();
         List<BigInteger> stationList = executor.executeSelect(selectStationsQuery,
                 Arrays.asList(new BigDecimal(id)), new IdSelector());
-        return executor.executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new RegionSelector(stationList));
+        return executor.executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
+                new RegionSelector(stationList));
     }
 
     @Override

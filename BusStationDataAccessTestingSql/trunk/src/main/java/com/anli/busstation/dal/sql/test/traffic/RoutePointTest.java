@@ -43,8 +43,8 @@ public abstract class RoutePointTest extends com.anli.busstation.dal.test.traffi
 
     @Override
     protected RoutePoint getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select route_point_id, station"
-                + " from route_points where route_point_id = ?";
+        String selectQuery = "select route_point_id, station "
+                + "from route_points where route_point_id = ?";
         return DBHelper.getExecutor().executeSelect(selectQuery,
                 Collections.singletonList(new BigDecimal(id)), new RoutePointSelector());
     }

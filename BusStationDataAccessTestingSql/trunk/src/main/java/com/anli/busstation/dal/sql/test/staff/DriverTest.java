@@ -44,40 +44,36 @@ public abstract class DriverTest extends com.anli.busstation.dal.test.staff.Driv
         DriverSkill skill = driver.getSkill();
         BigInteger skillId = skill == null ? null : skill.getId();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
-
         String createEmployeeQuery = "insert into employees (employee_id, name, salary, hiring_date)"
                 + " values (?, ?, ?, ?)";
         String createDriverQuery = "insert into drivers (employee_id, skill)"
                 + " values (?, ?)";
-
         List employeeParams = new ArrayList(4);
         employeeParams.add(new BigDecimal(id));
         employeeParams.add(name);
         employeeParams.add(salary);
         employeeParams.add(sqlHiringDate);
-
         List driverParams = new ArrayList(2);
         driverParams.add(new BigDecimal(id));
         driverParams.add(skillId != null ? new BigDecimal(skillId) : null);
-
         executor.executeUpdate(createEmployeeQuery, employeeParams);
         executor.executeUpdate(createDriverQuery, driverParams);
-
         return id;
     }
 
     @Override
     protected Driver getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select e.employee_id, e.name, e.salary, e.hiring_date, d.skill"
-                + " from employees e join drivers d on e.employee_id = d.employee_id where d.employee_id = ?";
-        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new DriverSelector());
+        String selectQuery = "select e.employee_id, e.name, e.salary, e.hiring_date, d.skill "
+                + "from employees e join drivers d on e.employee_id = d.employee_id where d.employee_id = ?";
+        return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
+                new DriverSelector());
     }
 
     @Override
     protected void clearStorageSpace() throws Exception {
-        String deleteDriversQuery = "delete d, e from drivers d join employees e on d.employee_id = e.employee_id";
+        String deleteDriversQuery = "delete d, e from drivers d join employees e "
+                + "on d.employee_id = e.employee_id";
         DBHelper.getExecutor().executeUpdate(deleteDriversQuery, null);
     }
 }

@@ -53,7 +53,6 @@ public abstract class BusRepairmentTest extends com.anli.busstation.dal.test.mai
         BigDecimal cost = repairment.getServiceCost();
         BigDecimal price = repairment.getExpendablesPrice();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
         String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, end_time, service_cost)"
                 + " values(?, ?, ?, ?, ?)";
@@ -78,18 +77,19 @@ public abstract class BusRepairmentTest extends com.anli.busstation.dal.test.mai
         brParams.add(new BigDecimal(id));
         brParams.add(price);
         executor.executeUpdate(createBrQuery, brParams);
-
         return id;
     }
 
     @Override
     protected BusRepairment getEntityManually(BigInteger id) throws Exception {
         SqlExecutor executor = DBHelper.getExecutor();
-        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, ta.service_cost, "
-                + "bs.bus, br.expendables_price from technical_assignments ta join bus_services bs "
+        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, "
+                + "ta.service_cost, bs.bus, br.expendables_price "
+                + "from technical_assignments ta join bus_services bs "
                 + " on ta.assignment_id = bs.assignment_id join bus_repairments br "
                 + " on ta.assignment_id = br.assignment_id where ta.assignment_id = ?";
-        return executor.executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new RepairmentSelector());
+        return executor.executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
+                new RepairmentSelector());
     }
 
     @Override
@@ -99,5 +99,4 @@ public abstract class BusRepairmentTest extends com.anli.busstation.dal.test.mai
                 + "on bs.assignment_id = ta.assignment_id";
         DBHelper.getExecutor().executeUpdate(deleteBrQuery, null);
     }
-
 }

@@ -22,8 +22,12 @@ import com.anli.busstation.dal.test.FixtureCreator;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class SqlFixtureCreator extends FixtureCreator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SqlFixtureCreator.class);
 
     protected abstract void setObjectId(BSEntity entity, BigInteger id);
 
@@ -32,7 +36,8 @@ public abstract class SqlFixtureCreator extends FixtureCreator {
         String table = getTable(entity);
         String idColumn = getIdColumn(entity);
         String updateQuery = "update " + table + " set " + idColumn + " = ? where " + idColumn + " = ?";
-        DBHelper.getExecutor().executeUpdate(updateQuery, Arrays.asList(new BigDecimal(id), new BigDecimal(entity.getId())));
+        DBHelper.getExecutor().executeUpdate(updateQuery, Arrays.asList(new BigDecimal(id),
+                new BigDecimal(entity.getId())));
         setObjectId(entity, id);
     }
 
@@ -88,6 +93,7 @@ public abstract class SqlFixtureCreator extends FixtureCreator {
         if (entity instanceof Ticket) {
             return "tickets";
         }
+        LOG.error("Could not resolve entity table for {}", entity.getClass());
         throw new RuntimeException(entity.getClass().getCanonicalName());
     }
 
@@ -143,6 +149,7 @@ public abstract class SqlFixtureCreator extends FixtureCreator {
         if (entity instanceof Ticket) {
             return "ticket_id";
         }
+        LOG.error("Could not resolve id column for {}", entity.getClass());
         throw new RuntimeException(entity.getClass().getCanonicalName());
     }
 }

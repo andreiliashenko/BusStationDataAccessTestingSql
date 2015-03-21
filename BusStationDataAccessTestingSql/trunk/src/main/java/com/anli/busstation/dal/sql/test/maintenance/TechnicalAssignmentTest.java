@@ -20,7 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import org.joda.time.DateTime;
 
-public abstract class TechnicalAssignmentTest extends com.anli.busstation.dal.test.maintenance.TechnicalAssignmentTest {
+public abstract class TechnicalAssignmentTest
+        extends com.anli.busstation.dal.test.maintenance.TechnicalAssignmentTest {
 
     protected class AssignmentSelector implements ResultSetHandler<TechnicalAssignment> {
 
@@ -37,7 +38,6 @@ public abstract class TechnicalAssignmentTest extends com.anli.busstation.dal.te
             Timestamp endTimeStamp = resultSet.getValue(4, Timestamp.class);
             DateTime endTime = endTimeStamp != null ? new DateTime(endTimeStamp.getTime()) : null;
             BigDecimal cost = resultSet.getValue(5, BigDecimal.class);
-
             TechnicalAssignment assignment = null;
             BigDecimal bdBusServiceId = resultSet.getValue(6, BigDecimal.class);
             if (bdBusServiceId != null) {
@@ -73,10 +73,9 @@ public abstract class TechnicalAssignmentTest extends com.anli.busstation.dal.te
         BigInteger mechanicId = mechanic != null ? mechanic.getId() : null;
         BigDecimal cost = assignment.getServiceCost();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
-        String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, end_time, service_cost)"
-                + " values(?, ?, ?, ?, ?)";
+        String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, "
+                + "end_time, service_cost) values(?, ?, ?, ?, ?)";
         List taParams = new ArrayList(5);
         taParams.add(new BigDecimal(id));
         taParams.add(mechanicId != null ? new BigDecimal(mechanicId) : null);
@@ -84,7 +83,6 @@ public abstract class TechnicalAssignmentTest extends com.anli.busstation.dal.te
         taParams.add(endTimeStamp);
         taParams.add(cost);
         executor.executeUpdate(createTaQuery, taParams);
-
         if (assignment instanceof BusService) {
             Bus bus = ((BusService) assignment).getBus();
             BigInteger busId = bus != null ? bus.getId() : null;
@@ -95,7 +93,6 @@ public abstract class TechnicalAssignmentTest extends com.anli.busstation.dal.te
             bsParams.add(busId != null ? new BigDecimal(busId) : null);
             executor.executeUpdate(createBsQuery, bsParams);
         }
-
         if (assignment instanceof BusRepairment) {
             BigDecimal price = ((BusRepairment) assignment).getExpendablesPrice();
             String createBrQuery = "insert into bus_repairments(assignment_id, expendables_price)"
@@ -128,14 +125,14 @@ public abstract class TechnicalAssignmentTest extends com.anli.busstation.dal.te
 
     @Override
     protected TechnicalAssignment getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, ta.service_cost, "
-                + "bs.assignment_id, bs.bus, bref.assignment_id, bref.gas_volume, brep.assignment_id, brep.expendables_price, "
-                + "ss.assignment_id, ss.description "
+        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, "
+                + "ta.service_cost, bs.assignment_id, bs.bus, bref.assignment_id, bref.gas_volume, "
+                + "brep.assignment_id, brep.expendables_price, ss.assignment_id, ss.description "
                 + "from technical_assignments ta left join bus_services bs "
-                + " on ta.assignment_id = bs.assignment_id left join bus_refuellings bref"
-                + " on bs.assignment_id = bref.assignment_id left join bus_repairments brep "
-                + " on ta.assignment_id = brep.assignment_id left join station_services ss" 
-                + " on ss.assignment_id = ta.assignment_id where ta.assignment_id = ?";
+                + "on ta.assignment_id = bs.assignment_id left join bus_refuellings bref "
+                + "on bs.assignment_id = bref.assignment_id left join bus_repairments brep "
+                + "on ta.assignment_id = brep.assignment_id left join station_services ss "
+                + "on ss.assignment_id = ta.assignment_id where ta.assignment_id = ?";
         return DBHelper.getExecutor()
                 .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new AssignmentSelector());
     }

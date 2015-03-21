@@ -48,7 +48,6 @@ public abstract class StationTest extends com.anli.busstation.dal.test.geography
         BigDecimal longitude = station.getLongitude();
         String name = station.getName();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
         String createQuery = "insert into stations (station_id, latitude, longitude, name)"
                 + " values(?, ?, ?, ?)";

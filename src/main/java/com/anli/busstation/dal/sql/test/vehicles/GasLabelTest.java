@@ -23,7 +23,6 @@ public abstract class GasLabelTest extends com.anli.busstation.dal.test.vehicles
             BigInteger id = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             BigDecimal price = resultSet.getValue(3, BigDecimal.class);
-
             GasLabel label = getNewGasLabel(id, name, price);
             return label;
         }
@@ -34,13 +33,11 @@ public abstract class GasLabelTest extends com.anli.busstation.dal.test.vehicles
         String name = label.getName();
         BigDecimal price = label.getPrice();
         BigInteger id = generateId();
-
         String createQuery = "insert into gas_labels (label_id, name, price) values(?, ?, ?)";
         List createParams = new ArrayList(3);
         createParams.add(new BigDecimal(id));
         createParams.add(name);
         createParams.add(price);
-
         DBHelper.getExecutor().executeUpdate(createQuery, createParams);
         return id;
     }
@@ -48,7 +45,6 @@ public abstract class GasLabelTest extends com.anli.busstation.dal.test.vehicles
     @Override
     protected GasLabel getEntityManually(BigInteger id) throws Exception {
         String selectQuery = "select label_id, name, price from gas_labels where label_id = ?";
-
         return DBHelper.getExecutor()
                 .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new GasLabelSelector());
     }

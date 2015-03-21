@@ -46,7 +46,6 @@ public abstract class RouteTest extends com.anli.busstation.dal.test.traffic.Rou
         List<RoutePoint> routePointList = route.getRoutePoints();
         List<Ride> rideList = route.getRides();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
         String createQuery = "insert into routes (route_id, num_code, ticket_price)"
                 + " values(?, ?, ?)";
@@ -56,7 +55,8 @@ public abstract class RouteTest extends com.anli.busstation.dal.test.traffic.Rou
         params.add(ticketPrice);
         executor.executeUpdate(createQuery, params);
 
-        String linkRoutePointsQuery = "update route_points set route = ?, route_order = ? where route_point_id = ?";
+        String linkRoutePointsQuery = "update route_points set route = ?, route_order = ? "
+                + "where route_point_id = ?";
         int index = 0;
         for (RoutePoint routePoint : routePointList) {
             index++;
@@ -78,11 +78,12 @@ public abstract class RouteTest extends com.anli.busstation.dal.test.traffic.Rou
     protected Route getEntityManually(BigInteger id) throws Exception {
         String selectQuery = "select route_id, num_code, ticket_price"
                 + " from routes where route_id = ?";
-        String selectRoutePointsQuery = "select route_point_id from route_points where route = ? order by route_order";
+        String selectRoutePointsQuery = "select route_point_id from route_points "
+                + "where route = ? order by route_order";
         String selectRidesQuery = "select ride_id from rides where route = ? order by route_order";
         SqlExecutor executor = DBHelper.getExecutor();
-        List<BigInteger> routePointIds = executor.executeSelect(selectRoutePointsQuery, Arrays.asList(new BigDecimal(id)),
-                new IdSelector());
+        List<BigInteger> routePointIds = executor.executeSelect(selectRoutePointsQuery,
+                Arrays.asList(new BigDecimal(id)), new IdSelector());
         List<BigInteger> rideIds = executor.executeSelect(selectRidesQuery, Arrays.asList(new BigDecimal(id)),
                 new IdSelector());
         return executor.executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),

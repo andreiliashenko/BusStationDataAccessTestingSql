@@ -34,20 +34,21 @@ public abstract class DriverSkillTest extends com.anli.busstation.dal.test.staff
         Integer maxPassengers = skill.getMaxPassengers();
         Integer maxRideLength = skill.getMaxRideLength();
         BigInteger id = generateId();
-        String createQuery = "insert into driver_skills (skill_id, name, max_passengers, max_ride_length) values(?, ?, ?, ?)";
+        String createQuery = "insert into driver_skills (skill_id, name, max_passengers, max_ride_length) "
+                + "values(?, ?, ?, ?)";
         List params = new ArrayList(4);
         params.add(new BigDecimal(id));
         params.add(name);
         params.add(maxPassengers);
         params.add(maxRideLength);
-
         DBHelper.getExecutor().executeUpdate(createQuery, params);
         return id;
     }
 
     @Override
     protected DriverSkill getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select skill_id, name, max_passengers, max_ride_length from driver_skills where skill_id = ?";
+        String selectQuery = "select skill_id, name, max_passengers, max_ride_length "
+                + "from driver_skills where skill_id = ?";
         return DBHelper.getExecutor().executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
                 new DriverSkillSelector());
     }

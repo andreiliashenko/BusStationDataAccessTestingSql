@@ -43,8 +43,8 @@ public abstract class RidePointTest extends com.anli.busstation.dal.test.traffic
         DateTime dtDepartureTime = ridePoint.getDepartureTime();
         Timestamp departureTime = dtDepartureTime != null ? new Timestamp(dtDepartureTime.getMillis()) : null;
         BigInteger id = generateId();
-        String createQuery = "insert into ride_points (ride_point_id, arrival_time, departure_time, route_point) "
-                + "values(?, ?, ?, ?)";
+        String createQuery = "insert into ride_points (ride_point_id, arrival_time, departure_time,"
+                + " route_point) values(?, ?, ?, ?)";
         List createParams = new ArrayList(4);
         createParams.add(new BigDecimal(id));
         createParams.add(arrivalTime);

@@ -23,7 +23,6 @@ public abstract class MechanicSkillTest extends com.anli.busstation.dal.test.sta
             BigInteger id = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String name = resultSet.getValue(2, String.class);
             Integer maxDiffLevel = resultSet.getValue(3, Integer.class);
-
             return getNewMechanicSkill(id, name, maxDiffLevel);
         }
     }
@@ -33,13 +32,11 @@ public abstract class MechanicSkillTest extends com.anli.busstation.dal.test.sta
         String name = skill.getName();
         Integer maxDiffLevel = skill.getMaxDiffLevel();
         BigInteger id = generateId();
-
         String createQuery = "insert into mechanic_skills (skill_id, name, max_diff_level) values(?, ?, ?)";
         List createParams = new ArrayList(3);
         createParams.add(new BigDecimal(id));
         createParams.add(name);
         createParams.add(maxDiffLevel);
-
         DBHelper.getExecutor().executeUpdate(createQuery, createParams);
         return id;
     }

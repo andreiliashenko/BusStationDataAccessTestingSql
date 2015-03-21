@@ -41,7 +41,6 @@ public abstract class TicketTest extends com.anli.busstation.dal.test.traffic.Ti
             return getNewTicket(resultId, arrPointId, customerName, depPointId, price,
                     saleDate, salesmanId, seat, sold, true);
         }
-
     }
 
     @Override

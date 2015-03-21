@@ -25,7 +25,6 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
 
         @Override
         public Employee handle(TransformingResultSet resultSet) throws SQLException {
-
             if (!resultSet.next()) {
                 return null;
             }
@@ -63,7 +62,6 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
         String name = employee.getName();
         BigDecimal salary = employee.getSalary();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
         String createEmployeeQuery = "insert into employees (employee_id, name, salary, hiring_date)"
                 + " values (?, ?, ?, ?)";
@@ -73,7 +71,6 @@ public abstract class EmployeeTest extends com.anli.busstation.dal.test.staff.Em
         employeeParams.add(salary);
         employeeParams.add(sqlHiringDate);
         executor.executeUpdate(createEmployeeQuery, employeeParams);
-
         if (employee instanceof Driver) {
             DriverSkill skill = ((Driver) employee).getSkill();
             BigInteger skillId = skill == null ? null : skill.getId();

@@ -29,7 +29,6 @@ public abstract class SalesmanTest extends com.anli.busstation.dal.test.staff.Sa
             Timestamp sqlHiringDate = resultSet.getValue(4, Timestamp.class);
             DateTime hiringDate = sqlHiringDate == null ? null : new DateTime(sqlHiringDate.getTime());
             Integer totalSales = resultSet.getValue(5, Integer.class);
-
             return getNewSalesman(resultId, name, salary, hiringDate, totalSales);
         }
     }
@@ -63,14 +62,16 @@ public abstract class SalesmanTest extends com.anli.busstation.dal.test.staff.Sa
     @Override
     protected Salesman getEntityManually(BigInteger id) throws Exception {
         String selectQuery = "select e.employee_id, e.name, e.salary, e.hiring_date, s.total_sales"
-                + " from employees e join salesmen s on e.employee_id = s.employee_id where s.employee_id = ?";
+                + " from employees e join salesmen s on e.employee_id = s.employee_id "
+                + "where s.employee_id = ?";
         return DBHelper.getExecutor()
                 .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new SalesmanSelector());
     }
 
     @Override
     protected void clearStorageSpace() throws Exception {
-        String deleteSalesmenQuery = "delete s, e from salesmen s join employees e on s.employee_id = e.employee_id";
+        String deleteSalesmenQuery = "delete s, e from salesmen s join employees e "
+                + "on s.employee_id = e.employee_id";
         DBHelper.getExecutor().executeUpdate(deleteSalesmenQuery, null);
     }
 }

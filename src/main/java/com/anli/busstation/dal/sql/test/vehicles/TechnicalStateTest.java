@@ -23,7 +23,6 @@ public abstract class TechnicalStateTest extends com.anli.busstation.dal.test.ve
             BigInteger id = resultSet.getValue(1, BigDecimal.class).toBigInteger();
             String description = resultSet.getValue(2, String.class);
             Integer diffLevel = resultSet.getValue(3, Integer.class);
-
             return getNewState(id, description, diffLevel);
         }
     }
@@ -33,7 +32,8 @@ public abstract class TechnicalStateTest extends com.anli.busstation.dal.test.ve
         String description = state.getDescription();
         Integer diffLevel = state.getDifficultyLevel();
         BigInteger id = generateId();
-        String createQuery = "insert into technical_states (state_id, description, difficulty_level) values(?, ?, ?)";
+        String createQuery = "insert into technical_states (state_id, description, difficulty_level) "
+                + "values(?, ?, ?)";
         List params = new ArrayList(3);
         params.add(new BigDecimal(id));
         params.add(description);
@@ -47,7 +47,8 @@ public abstract class TechnicalStateTest extends com.anli.busstation.dal.test.ve
         String selectQuery = "select state_id, description, difficulty_level "
                 + "from technical_states where state_id = ?";
         return DBHelper.getExecutor()
-                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new TechnicalStateSelector());
+                .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
+                        new TechnicalStateSelector());
     }
 
     @Override

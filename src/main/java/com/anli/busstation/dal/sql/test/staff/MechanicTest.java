@@ -44,24 +44,19 @@ public abstract class MechanicTest extends com.anli.busstation.dal.test.staff.Me
         MechanicSkill skill = mechanic.getSkill();
         BigInteger skillId = skill == null ? null : skill.getId();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
-
         String createEmployeeQuery = "insert into employees (employee_id, name, salary, hiring_date)"
                 + " values (?, ?, ?, ?)";
         String createMechanicQuery = "insert into mechanics (employee_id, skill)"
                 + " values (?, ?)";
-
         List employeeParams = new ArrayList(4);
         employeeParams.add(new BigDecimal(id));
         employeeParams.add(name);
         employeeParams.add(salary);
         employeeParams.add(sqlHiringDate);
-
         List mechanicParams = new ArrayList(2);
         mechanicParams.add(new BigDecimal(id));
         mechanicParams.add(skillId != null ? new BigDecimal(skillId) : null);
-
         executor.executeUpdate(createEmployeeQuery, employeeParams);
         executor.executeUpdate(createMechanicQuery, mechanicParams);
         return id;
@@ -69,15 +64,17 @@ public abstract class MechanicTest extends com.anli.busstation.dal.test.staff.Me
 
     @Override
     protected Mechanic getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select e.employee_id, e.name, e.salary, e.hiring_date, m.skill"
-                + " from employees e join mechanics m on e.employee_id = m.employee_id where m.employee_id = ?";
+        String selectQuery = "select e.employee_id, e.name, e.salary, e.hiring_date, m.skill "
+                + "from employees e join mechanics m "
+                + "on e.employee_id = m.employee_id where m.employee_id = ?";
         return DBHelper.getExecutor()
                 .executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)), new MechanicSelector());
     }
 
     @Override
     protected void clearStorageSpace() throws Exception {
-        String deleteMechanicsQuery = "delete m, e from mechanics m join employees e on e.employee_id = m.employee_id";
+        String deleteMechanicsQuery = "delete m, e from mechanics m join employees e "
+                + "on e.employee_id = m.employee_id";
         DBHelper.getExecutor().executeUpdate(deleteMechanicsQuery, null);
     }
 }

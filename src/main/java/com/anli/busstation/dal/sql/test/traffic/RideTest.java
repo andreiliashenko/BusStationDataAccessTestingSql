@@ -25,7 +25,8 @@ public abstract class RideTest extends com.anli.busstation.dal.test.traffic.Ride
         protected final List<BigInteger> rideRoads;
         protected final List<BigInteger> tickets;
 
-        public RideSelector(List<BigInteger> ridePoints, List<BigInteger> rideRoads, List<BigInteger> tickets) {
+        public RideSelector(List<BigInteger> ridePoints, List<BigInteger> rideRoads,
+                List<BigInteger> tickets) {
             this.ridePoints = ridePoints;
             this.rideRoads = rideRoads;
             this.tickets = tickets;
@@ -51,7 +52,6 @@ public abstract class RideTest extends com.anli.busstation.dal.test.traffic.Ride
         List<RideRoad> rideRoadList = ride.getRideRoads();
         List<Ticket> ticketList = ride.getTickets();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
         String createQuery = "insert into rides (ride_id, bus)"
                 + " values(?, ?)";
@@ -60,7 +60,8 @@ public abstract class RideTest extends com.anli.busstation.dal.test.traffic.Ride
         params.add(busId);
         executor.executeUpdate(createQuery, params);
 
-        String linkRidePointsQuery = "update ride_points set ride = ?, ride_order = ? where ride_point_id = ?";
+        String linkRidePointsQuery = "update ride_points set ride = ?, ride_order = ? "
+                + "where ride_point_id = ?";
         int index = 0;
         for (RidePoint ridePoint : ridePointList) {
             index++;
@@ -76,7 +77,8 @@ public abstract class RideTest extends com.anli.busstation.dal.test.traffic.Ride
                     new BigDecimal(ticket.getId())));
         }
 
-        String linkRideRoadsQuery = "update ride_roads set ride = ?, ride_order = ? where ride_road_id = ?";
+        String linkRideRoadsQuery = "update ride_roads set ride = ?, ride_order = ? "
+                + "where ride_road_id = ?";
         index = 0;
         for (RideRoad rideRoad : rideRoadList) {
             index++;
@@ -90,16 +92,19 @@ public abstract class RideTest extends com.anli.busstation.dal.test.traffic.Ride
     protected Ride getEntityManually(BigInteger id) throws Exception {
         String selectQuery = "select ride_id, bus"
                 + " from rides where ride_id = ?";
-        String selectRidePointsQuery = "select ride_point_id from ride_points where ride = ? order by ride_order";
-        String selectRideRoadsQuery = "select ride_road_id from ride_roads where ride = ? order by ride_order";
-        String selectTicketsQuery = "select ticket_id from tickets where ride = ? order by ride_order";
+        String selectRidePointsQuery = "select ride_point_id from ride_points "
+                + "where ride = ? order by ride_order";
+        String selectRideRoadsQuery = "select ride_road_id from ride_roads "
+                + "where ride = ? order by ride_order";
+        String selectTicketsQuery = "select ticket_id from tickets "
+                + "where ride = ? order by ride_order";
         SqlExecutor executor = DBHelper.getExecutor();
-        List<BigInteger> ridePointIds = executor.executeSelect(selectRidePointsQuery, Arrays.asList(new BigDecimal(id)),
-                new IdSelector());
-        List<BigInteger> rideRoadIds = executor.executeSelect(selectRideRoadsQuery, Arrays.asList(new BigDecimal(id)),
-                new IdSelector());
-        List<BigInteger> ticketIds = executor.executeSelect(selectTicketsQuery, Arrays.asList(new BigDecimal(id)),
-                new IdSelector());
+        List<BigInteger> ridePointIds = executor.executeSelect(selectRidePointsQuery,
+                Arrays.asList(new BigDecimal(id)), new IdSelector());
+        List<BigInteger> rideRoadIds = executor.executeSelect(selectRideRoadsQuery,
+                Arrays.asList(new BigDecimal(id)), new IdSelector());
+        List<BigInteger> ticketIds = executor.executeSelect(selectTicketsQuery,
+                Arrays.asList(new BigDecimal(id)), new IdSelector());
         return executor.executeSelect(selectQuery, Arrays.asList(new BigDecimal(id)),
                 new RideSelector(ridePointIds, rideRoadIds, ticketIds));
     }

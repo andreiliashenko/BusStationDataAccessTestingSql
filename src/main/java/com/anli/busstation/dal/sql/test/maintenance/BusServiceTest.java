@@ -37,7 +37,6 @@ public abstract class BusServiceTest extends com.anli.busstation.dal.test.mainte
             BigDecimal cost = resultSet.getValue(5, BigDecimal.class);
             BigDecimal bdBusId = resultSet.getValue(6, BigDecimal.class);
             BigInteger busId = bdBusId != null ? bdBusId.toBigInteger() : null;
-
             BigDecimal bdRefuellingId = resultSet.getValue(7, BigDecimal.class);
             BusService service = null;
             if (bdRefuellingId != null) {
@@ -65,7 +64,6 @@ public abstract class BusServiceTest extends com.anli.busstation.dal.test.mainte
         BigInteger mechanicId = mechanic != null ? mechanic.getId() : null;
         BigDecimal cost = service.getServiceCost();
         BigInteger id = generateId();
-
         SqlExecutor executor = DBHelper.getExecutor();
         String createTaQuery = "insert into technical_assignments (assignment_id, mechanic, begin_time, end_time, service_cost)"
                 + " values(?, ?, ?, ?, ?)";
@@ -107,8 +105,9 @@ public abstract class BusServiceTest extends com.anli.busstation.dal.test.mainte
 
     @Override
     protected BusService getEntityManually(BigInteger id) throws Exception {
-        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, ta.service_cost, "
-                + "bs.bus, bref.assignment_id, bref.gas_volume, brep.assignment_id, brep.expendables_price "
+        String selectQuery = "select ta.assignment_id, ta.mechanic, ta.begin_time, ta.end_time, "
+                + "ta.service_cost,bs.bus, bref.assignment_id, bref.gas_volume, brep.assignment_id, "
+                + "brep.expendables_price "
                 + "from technical_assignments ta join bus_services bs "
                 + " on ta.assignment_id = bs.assignment_id left join bus_refuellings bref"
                 + " on bs.assignment_id = bref.assignment_id left join bus_repairments brep "

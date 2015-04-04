@@ -54,9 +54,9 @@ public abstract class RegionTest extends com.anli.busstation.dal.test.geography.
         String linkStationQuery = "update stations set region = ?, region_order = ? where station_id = ?";
         int index = 0;
         for (Station station : stationList) {
-            index++;
             executor.executeUpdate(linkStationQuery, Arrays.asList(new BigDecimal(id), index,
                     new BigDecimal(station.getId())));
+            index++;
         }
         return id;
     }

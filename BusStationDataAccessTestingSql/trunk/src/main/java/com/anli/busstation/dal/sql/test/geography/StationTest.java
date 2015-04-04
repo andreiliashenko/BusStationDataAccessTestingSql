@@ -61,15 +61,15 @@ public abstract class StationTest extends com.anli.busstation.dal.test.geography
         String linkBusesQuery = "update buses set station = ?, station_order = ? where bus_id = ?";
         int index = 0;
         for (Bus bus : busList) {
-            index++;
             executor.executeUpdate(linkBusesQuery, Arrays.asList(new BigDecimal(id), index, new BigDecimal(bus.getId())));
+            index++;
         }
 
         String linkEmployeesQuery = "update employees set station = ?, station_order = ? where employee_id = ?";
         index = 0;
         for (Employee employee : employeeList) {
-            index++;
             executor.executeUpdate(linkEmployeesQuery, Arrays.asList(new BigDecimal(id), index, new BigDecimal(employee.getId())));
+            index++;
         }
         return id;
     }

@@ -59,17 +59,17 @@ public abstract class RouteTest extends com.anli.busstation.dal.test.traffic.Rou
                 + "where route_point_id = ?";
         int index = 0;
         for (RoutePoint routePoint : routePointList) {
-            index++;
             executor.executeUpdate(linkRoutePointsQuery, Arrays.asList(new BigDecimal(id), index,
                     new BigDecimal(routePoint.getId())));
+            index++;
         }
 
         String linkRidesQuery = "update rides set route = ?, route_order = ? where ride_id = ?";
         index = 0;
         for (Ride ride : rideList) {
-            index++;
             executor.executeUpdate(linkRidesQuery, Arrays.asList(new BigDecimal(id), index,
                     new BigDecimal(ride.getId())));
+            index++;
         }
         return id;
     }

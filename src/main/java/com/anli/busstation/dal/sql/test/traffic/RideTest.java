@@ -64,26 +64,26 @@ public abstract class RideTest extends com.anli.busstation.dal.test.traffic.Ride
                 + "where ride_point_id = ?";
         int index = 0;
         for (RidePoint ridePoint : ridePointList) {
-            index++;
             executor.executeUpdate(linkRidePointsQuery, Arrays.asList(new BigDecimal(id), index,
                     new BigDecimal(ridePoint.getId())));
+            index++;
         }
 
         String linkTicketsQuery = "update tickets set ride = ?, ride_order = ? where ticket_id = ?";
         index = 0;
         for (Ticket ticket : ticketList) {
-            index++;
             executor.executeUpdate(linkTicketsQuery, Arrays.asList(new BigDecimal(id), index,
                     new BigDecimal(ticket.getId())));
+            index++;
         }
 
         String linkRideRoadsQuery = "update ride_roads set ride = ?, ride_order = ? "
                 + "where ride_road_id = ?";
         index = 0;
         for (RideRoad rideRoad : rideRoadList) {
-            index++;
             executor.executeUpdate(linkRideRoadsQuery, Arrays.asList(new BigDecimal(id), index,
                     new BigDecimal(rideRoad.getId())));
+            index++;
         }
         return id;
     }
